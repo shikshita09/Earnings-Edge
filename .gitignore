@@ -5,3 +5,12 @@ venv/
 data/raw/
 *.csv
 .DS_Store
+
+cat >> .gitignore << 'EOF'
+
+# Large data files
+*.pkl
+*.csv
+data/raw/
+data/processed/
+EOF
