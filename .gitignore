@@ -13,4 +13,4 @@ cat >> .gitignore << 'EOF'
 *.csv
 data/raw/
 data/processed/
-EOF
+EOF.env
