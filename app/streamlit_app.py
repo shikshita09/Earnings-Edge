@@ -9,7 +9,7 @@ warnings.filterwarnings('ignore')
 
 # ── Absolute paths ─────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, 'data', 'processed')
+DATA_DIR = os.path.join(BASE_DIR, 'data', 'demo') if not os.path.exists(os.path.join(BASE_DIR, 'data', 'processed', 'full_dataset.pkl')) else os.path.join(BASE_DIR, 'data', 'processed')
 
 # ── Page config ────────────────────────────────────────────
 st.set_page_config(
@@ -44,7 +44,7 @@ def load_rag():
         model_kwargs={'device': 'cpu'}
     )
     vs = FAISS.load_local(
-        os.path.join(DATA_DIR, 'faiss_tiny'),
+        os.path.join(BASE_DIR, 'data', 'processed', 'faiss_tiny'),
         embeddings,
         allow_dangerous_deserialization=True
     )
