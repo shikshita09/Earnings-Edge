@@ -9,7 +9,9 @@ warnings.filterwarnings('ignore')
 
 # ── Absolute paths ─────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, 'data', 'demo') if not os.path.exists(os.path.join(BASE_DIR, 'data', 'processed', 'full_dataset.pkl')) else os.path.join(BASE_DIR, 'data', 'processed')
+DATA_DIR = (os.path.join(BASE_DIR, 'data', 'processed') 
+            if os.path.exists(os.path.join(BASE_DIR, 'data', 'processed', 'full_dataset.pkl'))
+            else os.path.join(BASE_DIR, 'data', 'demo'))
 
 # ── Page config ────────────────────────────────────────────
 st.set_page_config(
@@ -21,7 +23,11 @@ st.set_page_config(
 # ── Load data (cached) ─────────────────────────────────────
 @st.cache_data
 def load_data():
-    df = pd.read_pickle(os.path.join(DATA_DIR, 'full_dataset.pkl'))
+    # Try full dataset first, fall back to demo
+    full_path = os.path.join(BASE_DIR, 'data', 'processed', 'full_dataset.pkl')
+    demo_path = os.path.join(BASE_DIR, 'data', 'demo', 'demo_dataset.pkl')
+    path = full_path if os.path.exists(full_path) else demo_path
+    df = pd.read_pickle(path)
     df['date'] = pd.to_datetime(df['date'])
     df['year'] = df['date'].dt.year
     df['transcript_length'] = df['transcript'].str.split().str.len()
@@ -29,7 +35,10 @@ def load_data():
 
 @st.cache_data
 def load_sentiment():
-    return pd.read_pickle(os.path.join(DATA_DIR, 'sentiment_scores.pkl'))
+    full_path = os.path.join(BASE_DIR, 'data', 'processed', 'sentiment_scores.pkl')
+    demo_path = os.path.join(BASE_DIR, 'data', 'demo', 'demo_sentiment.pkl')
+    path = full_path if os.path.exists(full_path) else demo_path
+    return pd.read_pickle(path)
 
 @st.cache_resource
 def load_rag():
