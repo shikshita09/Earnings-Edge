@@ -14,3 +14,4 @@ cat >> .gitignore << 'EOF'
 data/raw/
 data/processed/
 EOF.env
+data/
